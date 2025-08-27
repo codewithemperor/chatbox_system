@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    const isValidPassword = hashPassword(password) === admin.password;
+    const isValidPassword = verifyPassword(password, admin.password);
     if (!isValidPassword) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }

@@ -1,141 +1,428 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# 🎓 COM1111 Chatbox System
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+An intelligent educational chat platform designed for computer science learning, featuring AI-powered tutoring, interactive assessments, and comprehensive content management for the Introduction to Computer Science course.
 
-## ✨ Technology Stack
+## 🌟 Overview
 
-This scaffold provides a robust foundation built with:
+The COM1111 Chatbox System is a full-stack educational platform that combines AI-powered chat assistance with structured learning content, quizzes, and administrative tools. It provides students with an interactive learning experience while giving instructors/admins powerful content management capabilities.
 
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+### 🎯 Key Features
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+#### For Students
+- **AI-Powered Chat Assistant**: Intelligent tutoring that responds to questions using curated course content
+- **Interactive Quizzes**: Engaging assessments with immediate feedback and explanations
+- **Topic Navigation**: Easy browsing of course materials organized by topic
+- **Progress Tracking**: Monitor learning progress and quiz performance
+- **Responsive Design**: Seamless experience across desktop and mobile devices
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+#### For Administrators/Instructors
+- **Admin Dashboard**: Comprehensive overview of system statistics and content
+- **Content Management**: Full CRUD operations for topics, notes, FAQs, and quizzes
+- **User Authentication**: Secure JWT-based authentication system
+- **Search & Filtering**: Efficient content discovery and management
+- **Real-time Updates**: Live content updates and student interaction tracking
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
+## 🏗️ Architecture & Methodology
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+### System Architecture
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend       │    │   Database      │
+│   (Next.js)     │◄──►│   (API Routes)  │◄──►│   (SQLite)      │
+│                 │    │                 │    │                 │
+│ • React 19      │    │ • JWT Auth      │    │ • Prisma ORM    │
+│ • TypeScript    │    │ • REST APIs     │    │ • Relational   │
+│ • Tailwind CSS  │    │ • Middleware    │    │ • Schema        │
+│ • shadcn/ui     │    │ • Validation    │    │ • Relations     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+### Methodology
 
-## 🎯 Why This Scaffold?
+#### 1. **Content-First AI Approach**
+- AI responses are generated from curated educational content rather than general knowledge
+- Administrators create structured notes and FAQs that serve as knowledge base
+- Keyword-based matching ensures relevant and accurate responses
+- Priority system: Notes (1.5x weight) > FAQs (1.0x weight)
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+#### 2. **Modular Design Pattern**
+- Component-based architecture using shadcn/ui
+- Reusable UI components with consistent styling
+- Separation of concerns between presentation and business logic
+- Type-safe development with TypeScript
+
+#### 3. **Database-Driven Content**
+- Centralized content management with relational database
+- Topic-based organization for structured learning
+- Audit trails with timestamps and user tracking
+- Cascading relationships for data integrity
+
+#### 4. **Security-First Implementation**
+- JWT-based authentication with secure password hashing
+- Role-based access control (Admin vs User)
+- Protected routes with middleware
+- Input validation and sanitization
+
+## 🗄️ Database Schema
+
+### Core Entities
+
+#### **Admin** (`Admin`)
+Manages system content and has authentication credentials.
+```sql
+- id: String (Primary Key)
+- email: String (Unique)
+- password: String (Hashed)
+- name: String
+- role: String (Default: "admin")
+- isActive: Boolean (Default: true)
+- createdAt/updatedAt: DateTime
+```
+
+#### **Topic** (`Topic`)
+Organizes content into logical course sections.
+```sql
+- id: String (Primary Key)
+- name: String (Unique)
+- description: String (Optional)
+- icon: String (Optional - Emoji)
+- color: String (Optional - Hex color)
+- createdAt/updatedAt: DateTime
+```
+
+#### **Note** (`Note`)
+Detailed learning materials created by administrators.
+```sql
+- id: String (Primary Key)
+- title: String
+- content: String (Rich text)
+- keywords: String (JSON array for search)
+- topicId: String (Foreign Key)
+- adminId: String (Foreign Key)
+- isActive: Boolean (Default: true)
+- createdAt/updatedAt: DateTime
+```
+
+#### **FAQ** (`FAQ`)
+Frequently asked questions for quick reference.
+```sql
+- id: String (Primary Key)
+- question: String
+- answer: String
+- keywords: String (JSON array for matching)
+- topicId: String (Foreign Key)
+- createdAt/updatedAt: DateTime
+```
+
+#### **Quiz** (`Quiz`)
+Assessments with multiple choice questions.
+```sql
+- id: String (Primary Key)
+- title: String
+- description: String (Optional)
+- topicId: String (Foreign Key)
+- adminId: String (Foreign Key)
+- difficulty: Int (1-5 scale)
+- isActive: Boolean (Default: true)
+- createdAt/updatedAt: DateTime
+```
+
+#### **QuizQuestion** (`QuizQuestion`)
+Individual questions within quizzes.
+```sql
+- id: String (Primary Key)
+- quizId: String (Foreign Key)
+- question: String
+- options: String (JSON array)
+- correctAnswer: Int (Index)
+- explanation: String (Optional)
+- createdAt: DateTime
+```
+
+### Interaction Tracking
+
+#### **ChatSession** (`ChatSession`)
+Tracks individual user sessions.
+```sql
+- id: String (Primary Key)
+- sessionId: String (Unique)
+- userAgent: String (Optional)
+- ipAddress: String (Optional)
+- createdAt/updatedAt: DateTime
+```
+
+#### **ChatLog** (`ChatLog`)
+Records all chat interactions.
+```sql
+- id: String (Primary Key)
+- sessionId: String (Foreign Key)
+- userQuery: String
+- botResponse: String
+- faqId: String (Optional - Foreign Key)
+- noteId: String (Optional - Foreign Key)
+- timestamp: DateTime
+```
+
+#### **QuizAttempt** (`QuizAttempt`)
+Tracks quiz completion and scores.
+```sql
+- id: String (Primary Key)
+- sessionId: String (Foreign Key)
+- quizId: String (Foreign Key)
+- score: Int
+- totalQuestions: Int
+- answers: String (JSON array)
+- completedAt: DateTime
+```
+
+#### **Feedback** (`Feedback`)
+User feedback on chat responses.
+```sql
+- id: String (Primary Key)
+- chatLogId: String (Foreign Key)
+- rating: Int (1=thumbs down, 2=thumbs up)
+- comment: String (Optional)
+- createdAt: DateTime
+```
+
+### Relationships
+
+```
+Admin ──┬── Note ────┬── Topic
+        │            │
+        ├── Quiz ──────┤
+        │            │
+        └── QuizQuestion
+        │
+Topic ──┬── FAQ
+        │
+        └── ChatLog ────┬── Feedback
+                       │
+                       └── ChatSession ─── QuizAttempt
+```
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **⚡ Next.js 15** - React framework with App Router
+- **📘 TypeScript 5** - Type-safe JavaScript
+- **🎨 Tailwind CSS 4** - Utility-first CSS framework
+- **🧩 shadcn/ui** - High-quality UI components
+- **🎯 Lucide React** - Icon library
+- **🌈 next-themes** - Dark/light mode support
+
+### Backend
+- **🗄️ Prisma** - Next-generation ORM
+- **🔐 JWT Authentication** - Secure token-based auth
+- **📊 REST APIs** - Clean API design
+- **🛡️ Middleware** - Route protection and validation
+
+### Database
+- **💾 SQLite** - Lightweight, file-based database
+- **🔄 Prisma Migrations** - Database schema management
+- **🔍 Relational Design** - Structured data relationships
+
+### Authentication & Security
+- **🔐 bcryptjs** - Password hashing
+- **🎫 jsonwebtoken** - JWT token management
+- **🛡️ Route Protection** - Middleware-based security
+- **✅ Input Validation** - Type-safe form handling
 
 ## 🚀 Quick Start
 
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+git clone <repository-url>
+cd chatbox_system
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-## 🤖 Powered by Z.ai
+3. **Set up the database**
+```bash
+# Generate Prisma client
+npm run db:generate
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+# Push schema to database
+npm run db:push
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+# Seed the database with sample data
+npx tsx prisma/seed.ts
+```
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+4. **Start the development server**
+```bash
+npm run dev
+```
+
+5. **Access the application**
+- **Student Interface**: [http://localhost:3000](http://localhost:3000)
+- **Admin Dashboard**: [http://localhost:3000/admin](http://localhost:3000/admin)
+
+### Default Admin Credentials
+- **Email**: `admin@com1111.edu`
+- **Password**: `admin123`
 
 ## 📁 Project Structure
 
 ```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+chatbox_system/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── admin/              # Admin dashboard pages
+│   │   │   ├── login/          # Admin login page
+│   │   │   ├── layout.tsx      # Admin layout
+│   │   │   ├── page.tsx        # Admin dashboard
+│   │   │   ├── topics/         # Topics management
+│   │   │   ├── notes/          # Notes management
+│   │   │   ├── quizzes/        # Quizzes management
+│   │   │   └── faqs/           # FAQs management
+│   │   ├── api/                # API routes
+│   │   │   ├── admin/          # Admin APIs
+│   │   │   ├── chat/           # Chat functionality
+│   │   │   ├── quiz/           # Quiz operations
+│   │   │   ├── topics/         # Topic data
+│   │   │   ├── notes/          # Note management
+│   │   │   ├── faqs/           # FAQ management
+│   │   │   ├── session/        # Session handling
+│   │   │   ├── feedback/       # User feedback
+│   │   │   └── health/         # Health check
+│   │   ├── layout.tsx          # Root layout
+│   │   └── page.tsx            # Home page (chat interface)
+│   ├── components/
+│   │   └── ui/                 # shadcn/ui components
+│   ├── hooks/                  # Custom React hooks
+│   ├── lib/                    # Utility functions
+│   │   ├── auth.ts             # Authentication utilities
+│   │   ├── db.ts               # Database client
+│   │   ├── socket.ts           # Socket.io setup
+│   │   └── utils.ts            # Helper functions
+│   └── globals.css            # Global styles
+├── prisma/
+│   ├── schema.prisma          # Database schema
+│   ├── seed.ts                # Database seeding
+│   └── migrations/            # Database migrations
+├── public/                     # Static assets
+├── package.json               # Dependencies and scripts
+├── tailwind.config.ts         # Tailwind configuration
+├── tsconfig.json             # TypeScript configuration
+├── next.config.ts            # Next.js configuration
+└── README.md                 # This file
 ```
 
-## 🎨 Available Features & Components
+## 🔧 Available Scripts
 
-This scaffold includes a comprehensive set of modern web development tools:
+```bash
+# Development
+npm run dev          # Start development server with hot reload
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+# Production
+npm run build        # Build for production
+npm run start        # Start production server
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+# Database
+npm run db:push      # Push schema to database
+npm run db:generate  # Generate Prisma client
+npm run db:migrate   # Run migrations
+npm run db:reset     # Reset database
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+# Code Quality
+npm run lint         # Run ESLint
+```
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+## 🎨 Key Features in Detail
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+### AI-Powered Chat System
+- **Content-Based Responses**: AI generates responses from admin-created notes and FAQs
+- **Keyword Matching**: Intelligent matching using keyword arrays and content analysis
+- **Priority System**: Notes weighted higher than FAQs for comprehensive answers
+- **Session Tracking**: Persistent chat sessions with history
+- **Feedback System**: Users can rate responses for continuous improvement
 
-## 🤝 Get Started with Z.ai
+### Admin Content Management
+- **Topics Management**: Create and organize course topics with icons and colors
+- **Notes Management**: Rich text content with keyword tagging for better search
+- **Quizzes Management**: Build assessments with multiple questions and difficulty levels
+- **FAQs Management**: Quick reference materials with keyword optimization
+- **Search & Filter**: Efficient content discovery across all management pages
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+### Interactive Assessment System
+- **Dynamic Quizzes**: Multiple choice questions with immediate feedback
+- **Difficulty Levels**: 5-tier difficulty system for progressive learning
+- **Performance Tracking**: Score calculation and attempt history
+- **Explanations**: Detailed explanations for correct and incorrect answers
+- **Progress Visualization**: Visual progress indicators during quizzes
+
+### User Experience
+- **Responsive Design**: Mobile-first approach with desktop optimization
+- **Dark/Light Mode**: Theme switching with system preference detection
+- **Loading States**: Proper loading indicators throughout the application
+- **Error Handling**: User-friendly error messages and validation
+- **Accessibility**: WCAG-compliant design with keyboard navigation
+
+## 🔐 Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: bcryptjs for secure password storage
+- **Route Protection**: Middleware protects admin routes
+- **Input Validation**: Type-safe form handling with validation
+- **SQL Injection Prevention**: Parameterized queries with Prisma ORM
+- **XSS Protection**: Built-in Next.js security features
+
+## 🚀 Deployment
+
+### Environment Variables
+Create a `.env` file with the following variables:
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-super-secret-jwt-key"
+NEXTAUTH_SECRET="your-nextauth-secret"
+```
+
+### Production Build
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm run start
+```
+
+### Database Considerations
+- **Development**: SQLite file database (included)
+- **Production**: Consider PostgreSQL/MySQL for better performance
+- **Backups**: Regular database backups recommended
+- **Migrations**: Use Prisma migrations for schema changes
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **Next.js Team** - For the excellent React framework
+- **Prisma Team** - For the modern database toolkit
+- **shadcn/ui** - For the beautiful UI components
+- **Tailwind CSS** - For the utility-first CSS framework
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+Built with ❤️ for educational excellence. Enhancing computer science learning through intelligent technology. 🎓
