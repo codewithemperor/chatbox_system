@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  notes     Note[]
+  quizzes   Quiz[]
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  notes       Note[]
+  faqs        FAQ[]
+  quizzes     Quiz[]
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  topicId     String
+  adminId     String
+  keywords    String   // JSON array of keywords for search
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  admin       Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  chatLogs    ChatLog[]
+}
+
+model FAQ {
+  id         String   @id @default(cuid())
+  question   String
+  answer     String
+  keywords   String   // JSON array of keywords for matching
+  topicId    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  chatLogs   ChatLog[]
+}
+
+model ChatSession {
+  id           String   @id @default(cuid())
+  sessionId    String   @unique
+  userAgent    String?
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  chatLogs     ChatLog[]
+  quizAttempts QuizAttempt[]
+}
+
+model ChatLog {
+  id          String   @id @default(cuid())
+  sessionId   String
+  userQuery   String
+  botResponse String
+  faqId       String?
+  noteId      String?
+  timestamp   DateTime @default(now())
+  
+  session     ChatSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  faq         FAQ?        @relation(fields: [faqId], references: [id], onDelete: SetNull)
+  note        Note?       @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  feedback    Feedback[]
+}
+
+model Feedback {
+  id         String   @id @default(cuid())
+  chatLogId  String
+  rating     Int      // 1 for thumbs down, 2 for thumbs up
+  comment    String?
+  createdAt  DateTime @default(now())
+  
+  chatLog    ChatLog @relation(fields: [chatLogId], references: [id], onDelete: Cascade)
+}
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  topicId     String
+  adminId     String
+  difficulty  Int      @default(1) // 1-5 scale
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  topic       Topic           @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  admin       Admin           @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+}
+
+model QuizQuestion {
+  id          String   @id @default(cuid())
+  quizId      String
+  question    String
+  options     String   // JSON array of options
+  correctAnswer Int    // index of correct answer
+  explanation String?
+  createdAt   DateTime @default(now())
+  
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  attempts    QuizAttempt[]
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  sessionId   String
+  quizId      String
+  score       Int
+  totalQuestions Int
+  answers     String   // JSON array of user answers
+  completedAt DateTime @default(now())
+  
+  session     ChatSession  @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  questions   QuizQuestion[]
+}
