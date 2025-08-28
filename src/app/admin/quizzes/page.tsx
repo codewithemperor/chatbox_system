@@ -66,14 +66,23 @@ export default function QuizzesManagement() {
   const [questions, setQuestions] = useState<QuestionFormData[]>([
     { question: '', options: ['', '', '', ''], correctAnswer: 0, explanation: '' }
   ]);
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchQuizzes();
-    fetchTopics();
+    setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (isClient) {
+      fetchQuizzes();
+      fetchTopics();
+    }
+  }, [isClient]);
+
   const fetchQuizzes = async () => {
+    if (!isClient) return;
+    
     setIsLoading(true);
     try {
       const token = localStorage.getItem('adminToken');
@@ -100,6 +109,8 @@ export default function QuizzesManagement() {
   };
 
   const fetchTopics = async () => {
+    if (!isClient) return;
+    
     try {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/topics', {
@@ -341,6 +352,17 @@ export default function QuizzesManagement() {
     };
     return texts[difficulty as keyof typeof texts] || 'Beginner';
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading quizzes...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -35,13 +35,22 @@ export default function TopicsManagement() {
     icon: '',
     color: '#3B82F6'
   });
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchTopics();
+    setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (isClient) {
+      fetchTopics();
+    }
+  }, [isClient]);
+
   const fetchTopics = async () => {
+    if (!isClient) return;
+    
     setIsLoading(true);
     try {
       const token = localStorage.getItem('adminToken');
@@ -69,6 +78,8 @@ export default function TopicsManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isClient) return;
+    
     setIsLoading(true);
 
     try {
@@ -125,6 +136,7 @@ export default function TopicsManagement() {
   };
 
   const handleDelete = async (topicId: string) => {
+    if (!isClient) return;
     if (!confirm('Are you sure you want to delete this topic? This will also delete all associated content.')) {
       return;
     }
@@ -174,6 +186,17 @@ export default function TopicsManagement() {
       color: '#3B82F6'
     });
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading topics...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

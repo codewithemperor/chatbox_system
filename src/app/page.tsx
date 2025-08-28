@@ -73,7 +73,6 @@ export default function Home() {
   
   // UI state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [theme, setTheme] = useState('light');
   
   // Quiz state
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
@@ -88,7 +87,7 @@ export default function Home() {
   // Initialize session and load data
   useEffect(() => {
     const initializeApp = async () => {
-      // Generate a simple session ID
+      // Generate a simple session ID only on client side
       const newSessionId = 'session_' + Date.now();
       setSessionId(newSessionId);
       
@@ -325,7 +324,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen flex bg-background">
       {/* Topic Sidebar */}
       <TopicSidebar
         topics={topics}
@@ -337,20 +336,20 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <header className="bg-card border-b">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="lg:hidden p-2 rounded-md hover:bg-muted"
               >
                 <Menu className="h-4 w-4" />
               </button>
               <div className="flex items-center gap-2">
-                <Brain className="h-8 w-8 text-blue-600" />
+                <Brain className="h-8 w-8 text-primary" />
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">COM1111 Assistant</h1>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <h1 className="text-xl font-bold text-foreground">COM1111 Assistant</h1>
+                  <p className="text-sm text-muted-foreground">
                     Introduction to Computer Science
                   </p>
                 </div>
@@ -360,17 +359,10 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsQuizModalOpen(true)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Trophy className="h-4 w-4" />
                 Take Quiz
-              </button>
-              
-              <button
-                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              >
-                {theme === 'light' ? '🌙' : '☀️'}
               </button>
             </div>
           </div>
@@ -381,11 +373,11 @@ export default function Home() {
           <div className="max-w-4xl mx-auto p-4 space-y-4">
             {messages.length <= 1 && (
               <div className="text-center py-12">
-                <MessageSquare className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-foreground mb-2">
                   Welcome to COM1111 Assistant!
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   I'm here to help you learn Introduction to Computer Science concepts. 
                   Ask me questions or explore topics from the sidebar.
                 </p>
@@ -394,7 +386,7 @@ export default function Home() {
                     <button
                       key={topic.id}
                       onClick={() => handleTopicClick(topic)}
-                      className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg flex items-center gap-2 transition-colors"
+                      className="px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg flex items-center gap-2 transition-colors"
                     >
                       <BookOpen className="h-4 w-4" />
                       {topic.name}
@@ -414,13 +406,13 @@ export default function Home() {
             
             {isLoading && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                  <Brain className="h-4 w-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                  <Brain className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3">
+                <div className="bg-card border rounded-lg px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Thinking...</span>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                    <span className="text-sm text-muted-foreground">Thinking...</span>
                   </div>
                 </div>
               </div>

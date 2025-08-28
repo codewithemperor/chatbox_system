@@ -43,14 +43,23 @@ export default function FAQsManagement() {
     keywords: '',
     topicId: ''
   });
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchFAQs();
-    fetchTopics();
+    setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    if (isClient) {
+      fetchFAQs();
+      fetchTopics();
+    }
+  }, [isClient]);
+
   const fetchFAQs = async () => {
+    if (!isClient) return;
+    
     setIsLoading(true);
     try {
       const token = localStorage.getItem('adminToken');
@@ -85,6 +94,8 @@ export default function FAQsManagement() {
   };
 
   const fetchTopics = async () => {
+    if (!isClient) return;
+    
     try {
       const token = localStorage.getItem('adminToken');
       const response = await fetch('/api/topics', {
@@ -239,6 +250,17 @@ export default function FAQsManagement() {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading FAQs...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

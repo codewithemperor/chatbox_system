@@ -1,4 +1,5 @@
 import { db } from '../src/lib/db';
+import { hashPassword } from '../src/lib/auth';
 import { v4 as uuidv4 } from 'uuid';
 
 async function seedDatabase() {
@@ -12,7 +13,7 @@ async function seedDatabase() {
       data: {
         id: uuidv4(),
         email: 'admin@com1111.edu',
-        password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', // password: admin123
+        password: hashPassword('admin123'),
         name: 'COM1111 Admin',
         role: 'admin',
         isActive: true

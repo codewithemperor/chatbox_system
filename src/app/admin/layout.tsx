@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 
 interface Admin {
   id: string;
@@ -36,9 +35,23 @@ export default function AdminLayout({
     totalQuizzes: 0,
     totalFaqs: 0,
   });
+  const [isClient, setIsClient] = useState(false);
+  const [currentPath, setCurrentPath] = useState('');
   const router = useRouter();
 
   useEffect(() => {
+    setIsClient(true);
+    setCurrentPath(window.location.pathname);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    // Don't check authentication on login page
+    if (currentPath === '/admin/login') {
+      return;
+    }
+
     // Check if admin is logged in
     const token = localStorage.getItem('adminToken');
     const adminData = localStorage.getItem('admin');
@@ -58,9 +71,11 @@ export default function AdminLayout({
 
     // Fetch dashboard stats
     fetchStats();
-  }, [router]);
+  }, [router, isClient, currentPath]);
 
   const fetchStats = async () => {
+    if (!isClient) return;
+
     try {
       const token = localStorage.getItem('adminToken');
       if (!token) {
@@ -90,8 +105,10 @@ export default function AdminLayout({
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('admin');
+    if (isClient) {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('admin');
+    }
     router.push('/admin/login');
   };
 
@@ -103,8 +120,12 @@ export default function AdminLayout({
     { href: '/admin/faqs', label: 'FAQs', icon: Settings },
   ];
 
-  if (!admin) {
-    console.log('Admin not loaded, showing loading');
+  if (!isClient) {
+    // Don't show admin layout on login page
+    if (currentPath === '/admin/login') {
+      return children;
+    }
+    
     return (
       <div className="flex h-screen bg-background items-center justify-center">
         <div className="text-center">
@@ -115,7 +136,21 @@ export default function AdminLayout({
     );
   }
 
-  console.log('Rendering admin layout with admin:', admin.name);
+  // Don't show admin layout on login page
+  if (currentPath === '/admin/login') {
+    return children;
+  }
+
+  if (!admin) {
+    return (
+      <div className="flex h-screen bg-background items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading admin panel...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-background">
