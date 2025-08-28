@@ -63,6 +63,12 @@ export default function AdminLayout({
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      if (!token) {
+        console.error('No admin token found');
+        router.push('/admin/login');
+        return;
+      }
+
       const response = await fetch('/api/admin/stats', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -72,6 +78,11 @@ export default function AdminLayout({
       if (response.ok) {
         const data = await response.json();
         setStats(data);
+      } else if (response.status === 401) {
+        console.error('Unauthorized - redirecting to login');
+        router.push('/admin/login');
+      } else {
+        console.error('Failed to fetch stats:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Failed to fetch stats:', error);
@@ -93,8 +104,18 @@ export default function AdminLayout({
   ];
 
   if (!admin) {
-    return null; // or loading spinner
+    console.log('Admin not loaded, showing loading');
+    return (
+      <div className="flex h-screen bg-background items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading admin panel...</p>
+        </div>
+      </div>
+    );
   }
+
+  console.log('Rendering admin layout with admin:', admin.name);
 
   return (
     <div className="flex h-screen bg-background">
@@ -195,6 +216,9 @@ export default function AdminLayout({
               <Badge variant="secondary">
                 {admin.role}
               </Badge>
+              <div className="text-xs text-muted-foreground">
+                Topics: {stats.totalTopics} | Notes: {stats.totalNotes} | Quizzes: {stats.totalQuizzes} | FAQs: {stats.totalFaqs}
+              </div>
             </div>
           </div>
         </header>

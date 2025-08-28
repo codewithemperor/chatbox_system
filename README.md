@@ -1,26 +1,47 @@
 # 🎓 COM1111 Chatbox System
 
-An intelligent educational chat platform designed for computer science learning, featuring AI-powered tutoring, interactive assessments, and comprehensive content management for the Introduction to Computer Science course.
+An intelligent educational chat platform designed for computer science learning, featuring **AI-powered tutoring**, **hybrid intelligence responses**, interactive assessments, and comprehensive content management for the Introduction to Computer Science course.
 
 ## 🌟 Overview
 
-The COM1111 Chatbox System is a full-stack educational platform that combines AI-powered chat assistance with structured learning content, quizzes, and administrative tools. It provides students with an interactive learning experience while giving instructors/admins powerful content management capabilities.
+The COM1111 Chatbox System is a full-stack educational platform that combines **hybrid AI intelligence** with structured learning content, quizzes, and administrative tools. It provides students with an intelligent learning experience while giving instructors/admins powerful content management capabilities.
 
 ### 🎯 Key Features
 
 #### For Students
-- **AI-Powered Chat Assistant**: Intelligent tutoring that responds to questions using curated course content
-- **Interactive Quizzes**: Engaging assessments with immediate feedback and explanations
-- **Topic Navigation**: Easy browsing of course materials organized by topic
-- **Progress Tracking**: Monitor learning progress and quiz performance
-- **Responsive Design**: Seamless experience across desktop and mobile devices
+- **🤖 Hybrid AI-Powered Chat Assistant**: Intelligent tutoring that prioritizes curated course content, with AI fallback for broader questions
+- **🧠 Smart Content Matching**: Advanced algorithm matches questions to database content with scoring system
+- **📝 Interactive Quizzes**: Engaging assessments with immediate feedback and explanations
+- **🗂️ Topic Navigation**: Easy browsing of course materials organized by topic
+- **📊 Progress Tracking**: Monitor learning progress and quiz performance
+- **🎨 Beautiful UI**: Modern interface with SweetAlert2 notifications and responsive design
 
 #### For Administrators/Instructors
-- **Admin Dashboard**: Comprehensive overview of system statistics and content
-- **Content Management**: Full CRUD operations for topics, notes, FAQs, and quizzes
-- **User Authentication**: Secure JWT-based authentication system
-- **Search & Filtering**: Efficient content discovery and management
-- **Real-time Updates**: Live content updates and student interaction tracking
+- **📈 Admin Dashboard**: Comprehensive overview of system statistics and content with loading states
+- **📝 Content Management**: Full CRUD operations for topics, notes, FAQs, and quizzes
+- **🔐 User Authentication**: Secure JWT-based authentication system with proper error handling
+- **🔍 Search & Filtering**: Efficient content discovery and management
+- **⚡ Real-time Updates**: Live content updates and student interaction tracking
+
+## 🚀 NEW FEATURES - v2.0
+
+### 🤖 Enhanced AI Intelligence
+- **Hybrid Response System**: Prioritizes database content first, falls back to AI for broader questions
+- **Smart Matching Algorithm**: Advanced scoring system with keyword, topic, and content analysis
+- **AI Agent Integration**: Uses z-ai-web-dev-sdk for intelligent responses when database content is insufficient
+- **Context-Aware Responses**: AI considers existing course materials when generating responses
+
+### 💬 Improved Chat Experience
+- **Database-First Approach**: Only uses verified course content from the database
+- **Honest Fallbacks**: When no information is available, clearly states limitations rather than making up answers
+- **Enhanced Matching**: Searches both FAQs and Notes with intelligent scoring
+- **Related Terms**: Expands search with related computer science terminology
+
+### 🎨 Better User Experience
+- **SweetAlert2 Integration**: Beautiful, professional notifications instead of basic browser alerts
+- **Loading States**: Proper loading indicators throughout the application
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Component Architecture**: Well-organized, reusable components for better maintainability
 
 ## 🏗️ Architecture & Methodology
 
@@ -35,34 +56,53 @@ The COM1111 Chatbox System is a full-stack educational platform that combines AI
 │ • TypeScript    │    │ • REST APIs     │    │ • Relational   │
 │ • Tailwind CSS  │    │ • Middleware    │    │ • Schema        │
 │ • shadcn/ui     │    │ • Validation    │    │ • Relations     │
+│ • SweetAlert2   │    │ • AI Agent      │    │ • Content       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+                               │
+                    ┌─────────────────┐
+                    │   AI Agent      │
+                    │   (z-ai-sdk)    │
+                    │                 │
+                    │ • Chat GPT       │
+                    │ • Context Aware │
+                    │ • Fallback      │
+                    └─────────────────┘
 ```
 
 ### Methodology
 
-#### 1. **Content-First AI Approach**
-- AI responses are generated from curated educational content rather than general knowledge
-- Administrators create structured notes and FAQs that serve as knowledge base
-- Keyword-based matching ensures relevant and accurate responses
-- Priority system: Notes (1.5x weight) > FAQs (1.0x weight)
+#### 1. **Hybrid Intelligence Approach**
+- **Database-First**: Always prioritizes curated course content from the database
+- **AI Fallback**: Uses AI agent when no good database match is found (score < 3)
+- **Smart Scoring**: Advanced matching algorithm with multi-point scoring system
+- **Honest Responses**: Clearly states when information is not available
 
-#### 2. **Modular Design Pattern**
-- Component-based architecture using shadcn/ui
-- Reusable UI components with consistent styling
-- Separation of concerns between presentation and business logic
-- Type-safe development with TypeScript
+#### 2. **Advanced Matching Algorithm**
+The system uses a sophisticated scoring mechanism:
 
-#### 3. **Database-Driven Content**
-- Centralized content management with relational database
-- Topic-based organization for structured learning
-- Audit trails with timestamps and user tracking
-- Cascading relationships for data integrity
+```javascript
+Scoring System:
+- Keyword Match: 5 points (exact keyword from database)
+- Topic Match: 4 points (matches course topic)
+- Title Word: 2 points (matches question/title words)
+- Content Word: 0.5 points (matches answer content, capped at 3)
+- Related Terms: 1 point (matches related terminology)
 
-#### 4. **Security-First Implementation**
-- JWT-based authentication with secure password hashing
-- Role-based access control (Admin vs User)
-- Protected routes with middleware
-- Input validation and sanitization
+Minimum threshold: 3 points for database response
+Below threshold: AI agent provides response
+```
+
+#### 3. **AI Integration Strategy**
+- **Context Provision**: AI receives database content as context for relevant responses
+- **Guidelines**: AI is instructed to only answer computer science-related questions
+- **Fallback Safety**: If AI fails, system provides honest limitations message
+- **Educational Focus**: AI maintains teaching assistant role with clear boundaries
+
+#### 4. **Component-Based Architecture**
+- **Modular Design**: Reusable components for better maintainability
+- **Separation of Concerns**: Clear separation between UI, logic, and data layers
+- **Type Safety**: Comprehensive TypeScript typing throughout
+- **Error Boundaries**: Graceful error handling at component level
 
 ## 🗄️ Database Schema
 
@@ -202,7 +242,7 @@ Topic ──┬── FAQ
                        └── ChatSession ─── QuizAttempt
 ```
 
-## 🛠️ Technology Stack
+## 🛠️ Enhanced Technology Stack
 
 ### Frontend
 - **⚡ Next.js 15** - React framework with App Router
@@ -211,23 +251,28 @@ Topic ──┬── FAQ
 - **🧩 shadcn/ui** - High-quality UI components
 - **🎯 Lucide React** - Icon library
 - **🌈 next-themes** - Dark/light mode support
+- **🍭 SweetAlert2** - Beautiful notifications and modals
+- **📦 React Components** - Modular, reusable architecture
 
 ### Backend
 - **🗄️ Prisma** - Next-generation ORM
 - **🔐 JWT Authentication** - Secure token-based auth
 - **📊 REST APIs** - Clean API design
 - **🛡️ Middleware** - Route protection and validation
+- **🤖 AI Integration** - z-ai-web-dev-sdk for intelligent responses
+- **⚡ Real-time** - Socket.io for live interactions
 
 ### Database
 - **💾 SQLite** - Lightweight, file-based database
 - **🔄 Prisma Migrations** - Database schema management
 - **🔍 Relational Design** - Structured data relationships
+- **📊 Content Schema** - Optimized for educational content
 
-### Authentication & Security
-- **🔐 bcryptjs** - Password hashing
-- **🎫 jsonwebtoken** - JWT token management
-- **🛡️ Route Protection** - Middleware-based security
-- **✅ Input Validation** - Type-safe form handling
+### AI & Intelligence
+- **🧠 z-ai-web-dev-sdk** - AI agent integration
+- **🎯 Smart Matching** - Advanced content discovery algorithm
+- **📚 Context Awareness** - AI considers existing course materials
+- **🛡️ Safety Fallbacks** - Graceful handling of unknown topics
 
 ## 🚀 Quick Start
 
@@ -256,7 +301,7 @@ npm run db:generate
 # Push schema to database
 npm run db:push
 
-# Seed the database with sample data
+# Seed the database with sample data (includes 8 topics, 11 FAQs, 4 quizzes)
 npx tsx prisma/seed.ts
 ```
 
@@ -273,102 +318,65 @@ npm run dev
 - **Email**: `admin@com1111.edu`
 - **Password**: `admin123`
 
-## 📁 Project Structure
-
-```
-chatbox_system/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── admin/              # Admin dashboard pages
-│   │   │   ├── login/          # Admin login page
-│   │   │   ├── layout.tsx      # Admin layout
-│   │   │   ├── page.tsx        # Admin dashboard
-│   │   │   ├── topics/         # Topics management
-│   │   │   ├── notes/          # Notes management
-│   │   │   ├── quizzes/        # Quizzes management
-│   │   │   └── faqs/           # FAQs management
-│   │   ├── api/                # API routes
-│   │   │   ├── admin/          # Admin APIs
-│   │   │   ├── chat/           # Chat functionality
-│   │   │   ├── quiz/           # Quiz operations
-│   │   │   ├── topics/         # Topic data
-│   │   │   ├── notes/          # Note management
-│   │   │   ├── faqs/           # FAQ management
-│   │   │   ├── session/        # Session handling
-│   │   │   ├── feedback/       # User feedback
-│   │   │   └── health/         # Health check
-│   │   ├── layout.tsx          # Root layout
-│   │   └── page.tsx            # Home page (chat interface)
-│   ├── components/
-│   │   └── ui/                 # shadcn/ui components
-│   ├── hooks/                  # Custom React hooks
-│   ├── lib/                    # Utility functions
-│   │   ├── auth.ts             # Authentication utilities
-│   │   ├── db.ts               # Database client
-│   │   ├── socket.ts           # Socket.io setup
-│   │   └── utils.ts            # Helper functions
-│   └── globals.css            # Global styles
-├── prisma/
-│   ├── schema.prisma          # Database schema
-│   ├── seed.ts                # Database seeding
-│   └── migrations/            # Database migrations
-├── public/                     # Static assets
-├── package.json               # Dependencies and scripts
-├── tailwind.config.ts         # Tailwind configuration
-├── tsconfig.json             # TypeScript configuration
-├── next.config.ts            # Next.js configuration
-└── README.md                 # This file
-```
-
-## 🔧 Available Scripts
-
-```bash
-# Development
-npm run dev          # Start development server with hot reload
-
-# Production
-npm run build        # Build for production
-npm run start        # Start production server
-
-# Database
-npm run db:push      # Push schema to database
-npm run db:generate  # Generate Prisma client
-npm run db:migrate   # Run migrations
-npm run db:reset     # Reset database
-
-# Code Quality
-npm run lint         # Run ESLint
-```
-
 ## 🎨 Key Features in Detail
 
-### AI-Powered Chat System
-- **Content-Based Responses**: AI generates responses from admin-created notes and FAQs
-- **Keyword Matching**: Intelligent matching using keyword arrays and content analysis
-- **Priority System**: Notes weighted higher than FAQs for comprehensive answers
-- **Session Tracking**: Persistent chat sessions with history
-- **Feedback System**: Users can rate responses for continuous improvement
+### 🤖 Hybrid AI Chat System
+- **Database-First Responses**: Always prioritizes curated course content
+- **Intelligent Matching**: Advanced scoring system with multiple matching criteria
+- **AI Fallback**: Uses AI agent when database content is insufficient (score < 3)
+- **Honest Limitations**: Clearly states when information is not available
+- **Context Integration**: AI considers existing course materials for relevant responses
 
-### Admin Content Management
-- **Topics Management**: Create and organize course topics with icons and colors
-- **Notes Management**: Rich text content with keyword tagging for better search
-- **Quizzes Management**: Build assessments with multiple questions and difficulty levels
-- **FAQs Management**: Quick reference materials with keyword optimization
-- **Search & Filter**: Efficient content discovery across all management pages
+#### Smart Matching Algorithm
+```javascript
+// Multi-point scoring system
+const scoring = {
+  keywordMatch: 5,      // Exact keyword from database
+  topicMatch: 4,       // Matches course topic
+  titleWord: 2,        // Matches question/title words  
+  contentWord: 0.5,    // Matches answer content (capped at 3)
+  relatedTerms: 1      // Matches related terminology
+};
 
-### Interactive Assessment System
+// Threshold-based response selection
+if (totalScore >= 3) {
+  return databaseContent;
+} else {
+  return await aiResponse(userMessage, databaseContext);
+}
+```
+
+### 📈 Enhanced Admin Dashboard
+- **Loading States**: Proper loading indicators throughout
+- **Error Handling**: Comprehensive error handling with retry functionality
+- **Real Statistics**: Live data from database with proper authentication
+- **Activity Tracking**: Recent content updates and user interactions
+- **Quick Actions**: Easy navigation to management features
+
+### 🎨 SweetAlert2 Integration
+- **Beautiful Notifications**: Replaces basic browser alerts with professional modals
+- **Quiz Completion**: Elegant result displays with score information
+- **Feedback System**: User-friendly feedback collection
+- **Error Messages**: Professional error handling with clear messaging
+
+### 🧩 Component Architecture
+- **Modular Design**: Reusable components for better maintainability
+- **Chat Components**: Separate components for messages, input, and sidebar
+- **Quiz Components**: Modular quiz interface with result display
+- **UI Consistency**: Unified design system with shadcn/ui
+
+### 📊 Interactive Assessment System
 - **Dynamic Quizzes**: Multiple choice questions with immediate feedback
 - **Difficulty Levels**: 5-tier difficulty system for progressive learning
 - **Performance Tracking**: Score calculation and attempt history
 - **Explanations**: Detailed explanations for correct and incorrect answers
-- **Progress Visualization**: Visual progress indicators during quizzes
+- **SweetAlert Results**: Beautiful result displays with performance metrics
 
-### User Experience
-- **Responsive Design**: Mobile-first approach with desktop optimization
-- **Dark/Light Mode**: Theme switching with system preference detection
-- **Loading States**: Proper loading indicators throughout the application
-- **Error Handling**: User-friendly error messages and validation
-- **Accessibility**: WCAG-compliant design with keyboard navigation
+### 🔍 Enhanced Content Discovery
+- **FAQ & Note Search**: Searches both content types with intelligent scoring
+- **Keyword Optimization**: Advanced keyword matching and analysis
+- **Topic Organization**: Content organized by course topics
+- **Related Terms**: Expanded search with computer science terminology
 
 ## 🔐 Security Features
 
@@ -378,6 +386,7 @@ npm run lint         # Run ESLint
 - **Input Validation**: Type-safe form handling with validation
 - **SQL Injection Prevention**: Parameterized queries with Prisma ORM
 - **XSS Protection**: Built-in Next.js security features
+- **AI Safety**: AI agent restricted to computer science topics
 
 ## 🚀 Deployment
 
