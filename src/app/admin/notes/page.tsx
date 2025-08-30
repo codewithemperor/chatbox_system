@@ -402,7 +402,7 @@ export default function NotesManagement() {
                   <SelectValue placeholder="All topics" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All topics</SelectItem>
+                  <SelectItem value="all">All topics</SelectItem>
                   {topics.map((topic) => (
                     <SelectItem key={topic.id} value={topic.id}>
                       {topic.icon && <span className="mr-2">{topic.icon}</span>}
@@ -427,7 +427,7 @@ export default function NotesManagement() {
           <p className="mt-2 text-muted-foreground">Loading notes...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredNotes.map((note) => (
             <Card key={note.id} className="relative">
               <CardHeader className="pb-3">

@@ -266,7 +266,7 @@ export default function FAQsManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">FAQs Management</h2>
+          <h2 className="text-2xl text-primary font-bold">FAQs Management</h2>
           <p className="text-muted-foreground">
             Create and manage frequently asked questions for each topic
           </p>
@@ -393,7 +393,7 @@ export default function FAQsManagement() {
                   <SelectValue placeholder="All topics" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All topics</SelectItem>
+                  <SelectItem value="all">All topics</SelectItem>
                   {topics.map((topic) => (
                     <SelectItem key={topic.id} value={topic.id}>
                       {topic.icon && <span className="mr-2">{topic.icon}</span>}
@@ -418,7 +418,7 @@ export default function FAQsManagement() {
           <p className="mt-2 text-muted-foreground">Loading FAQs...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredFAQs.map((faq) => (
             <Card key={faq.id} className="relative">
               <CardHeader className="pb-3">

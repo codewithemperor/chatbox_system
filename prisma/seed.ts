@@ -14,7 +14,7 @@ async function seedDatabase() {
         id: uuidv4(),
         email: 'admin@com1111.edu',
         password: hashPassword('admin123'),
-        name: 'COM1111 Admin',
+        name: 'Sulaimon Yusuf',
         role: 'admin',
         isActive: true
       }

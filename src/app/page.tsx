@@ -133,6 +133,7 @@ export default function Home() {
       const response = await fetch('/api/quiz');
       if (response.ok) {
         const data = await response.json();
+        console.log(data)
         setQuizzes(data);
       }
     } catch (error) {
@@ -244,13 +245,43 @@ export default function Home() {
   };
 
   // Quiz functionality
+  const handleTakeQuizClick = async () => {
+    // Check if there are any quizzes available
+    if (quizzes.length === 0) {
+      await SwAlert.fire({
+        icon: 'info',
+        title: 'No Quizzes Available',
+        text: 'There are currently no quizzes available. Please check back later!',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // Check if there are topics with quizzes
+    const topicsWithQuizzes = topics.filter(topic => 
+      quizzes.some(quiz => quiz.topicId === topic.id)
+    );
+
+    if (topicsWithQuizzes.length === 0) {
+      await SwAlert.fire({
+        icon: 'info',
+        title: 'No Quiz Topics Available',
+        text: 'There are currently no topics with available quizzes. Please check back later!',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // Open the quiz modal for topic/quiz selection
+    setIsQuizModalOpen(true);
+  };
+
   const startQuiz = (quiz: Quiz) => {
     setSelectedQuiz(quiz);
     setCurrentQuestionIndex(0);
     setUserAnswers([]);
     setQuizResults([]);
     setIsQuizCompleted(false);
-    setIsQuizModalOpen(true);
   };
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -358,7 +389,7 @@ export default function Home() {
             
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setIsQuizModalOpen(true)}
+                onClick={handleTakeQuizClick}
                 className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Trophy className="h-4 w-4" />
@@ -439,8 +470,11 @@ export default function Home() {
         userAnswers={userAnswers}
         isQuizCompleted={isQuizCompleted}
         quizResults={quizResults}
+        topics={topics}
+        quizzes={quizzes}
         onAnswerSelect={handleAnswerSelect}
         onNextQuestion={handleNextQuestion}
+        onQuizSelect={startQuiz}
         onClose={resetQuiz}
       />
     </div>
