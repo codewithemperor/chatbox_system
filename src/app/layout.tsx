@@ -50,7 +50,7 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
-        <footer className="bg-black/30 fixed top-0 start-0 end-0 text-gray-200 text-center text-xs py-2  z-10">
+        <footer className="bg-black/20 fixed top-0 start-0 end-0 text-gray-200 text-center text-xs py-1  z-10">
           Design and code by <span className="font-semibold">Sulaimon Yusuf Ayomide</span> —{" "}
           <span className="italic">codewithemperor</span>
         </footer>
